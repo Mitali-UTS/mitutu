@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "mitutu"
+version = "0.1.0"
+description = "A random collection of code I use day to day :)"
+authors = ["Mitali Balki"]
+license = "None"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11.4"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
