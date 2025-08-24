@@ -62,7 +62,7 @@ def save_sets(X_train=None, y_train=None, X_val=None, y_val=None, X_test=None, y
     if y_test is not None:
       np.save(f'{path}y_test',  y_test)
 
-def load_sets(path='../data/processed/'):
+def load_sets1(path='../data/processed/'):
     """Load the different locally save sets
 
     Parameters
@@ -193,5 +193,40 @@ def split_sets_random(features, target, test_ratio=0.2):
     val_ratio = test_ratio / (1 - test_ratio)
     X_data, X_test, y_data, y_test = train_test_split(features, target, test_size=test_ratio, random_state=8)
     X_train, X_val, y_train, y_val = train_test_split(X_data, y_data, test_size=val_ratio, random_state=8)
+
+    return X_train, y_train, X_val, y_val, X_test, y_test
+
+def load_sets(path='../data/processed/'):
+    """Load the different locally saved sets which are usually in CSV format.
+
+    Parameters
+    ----------
+    path : str
+        Path to the folder where the sets are saved (default: '../data/processed/')
+
+    Returns
+    -------
+    Pandas DataFrame
+        Features for the training set
+    Pandas DataFrame
+        Target for the training set
+    Pandas DataFrame
+        Features for the validation set
+    Pandas DataFrame
+        Target for the validation set
+    Pandas DataFrame
+        Features for the testing set
+    Pandas DataFrame
+        Target for the testing set
+    """
+    import pandas as pd
+    import os.path
+
+    X_train = pd.read_csv(f'{path}X_train.csv') if os.path.isfile(f'{path}X_train.csv') else None
+    X_val   = pd.read_csv(f'{path}X_val.csv'  ) if os.path.isfile(f'{path}X_val.csv')   else None
+    X_test  = pd.read_csv(f'{path}X_test.csv' ) if os.path.isfile(f'{path}X_test.csv')  else None
+    y_train = pd.read_csv(f'{path}y_train.csv') if os.path.isfile(f'{path}y_train.csv') else None
+    y_val   = pd.read_csv(f'{path}y_val.csv'  ) if os.path.isfile(f'{path}y_val.csv')   else None
+    y_test  = pd.read_csv(f'{path}y_test.csv' ) if os.path.isfile(f'{path}y_test.csv')  else None
 
     return X_train, y_train, X_val, y_val, X_test, y_test
