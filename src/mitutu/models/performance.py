@@ -21,9 +21,8 @@ def print_regressor_scores(y_preds, y_actuals, set_name=None):
     print(f"MAE {set_name}: {mae(y_actuals, y_preds)}")
 
 # function to evaluate classififcation models
-def evaluate_classification_model(y_true, y_preds, data_case = 'training', target_labels = [0,1], target_names = []):
-    """
-    Creates a classification report for the predictions which includes recall scores, f1-scores and confusion matrix.
+def evaluate_classification_model(y_true, y_preds, data_case = 'training', target_labels = None, target_names = None):
+    """Creates a classification report for the predictions which includes recall scores, f1-scores and confusion matrix.
     
     Parameters
     ----------
@@ -99,3 +98,7 @@ def evaluate_classification_model(y_true, y_preds, data_case = 'training', targe
     # show plot
     plt.tight_layout()
     plt.show()
+
+# just to test if this works
+def test_func():
+   print("I work very well")
