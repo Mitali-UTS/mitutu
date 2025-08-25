@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mitutu"
-version = "2025.0.1.8"
+version = "2025.0.1.9"
 description = "A random collection of code I use day to day :)"
 authors = ["Mitali Balki"]
 license = "None"
@@ -13,6 +13,7 @@ scikit-learn = "1.5.1"
 matplotlib = "3.10.5"
 seaborn = "0.13.2"
 numpy = "2.3.2"
+joblib = "1.4.2"
 
 
 [tool.poetry.group.dev.dependencies]

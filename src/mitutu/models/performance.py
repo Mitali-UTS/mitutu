@@ -99,6 +99,32 @@ def evaluate_classification_model(y_true, y_preds, data_case = 'training', targe
     plt.tight_layout()
     plt.show()
 
-# just to test if this works
-def test_func():
-   print("I work very well")
+# function to save a model using joblib
+def save_model(model, model_name = None, file_path = ''):
+    """
+    A function that saves any model in .joblib format, optionally, in a specified folder.
+
+    Parameters
+    ----------
+    model:
+        Model to be saved (sklearn model or models compatible with .joblib format)
+    model_name: str
+        Name to be assigned to the saved model file.
+    file_path: str
+        The path to the directory in which the model is to be stored.
+
+    Returns
+    -------
+    """
+    # import required libraries
+    import joblib
+
+    # save model in given location
+    try:
+        joblib.dump(model, file_path + f'{model_name}.joblib')
+    except:
+        print("An error occured while saving your model")
+    
+
+
+
