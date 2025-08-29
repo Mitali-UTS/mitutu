@@ -1,20 +1,19 @@
 [tool.poetry]
 name = "mitutu"
-version = "2025.0.1.9"
+version = "2025.0.1.10"
 description = "A random collection of code I use day to day :)"
 authors = ["Mitali Balki"]
 license = "None"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11.4"
+python = ">=3.11"
 pandas = "2.2.2"
 scikit-learn = "1.5.1"
 matplotlib = "3.10.5"
 seaborn = "0.13.2"
 numpy = "2.3.2"
 joblib = "1.4.2"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "8.2.2"
