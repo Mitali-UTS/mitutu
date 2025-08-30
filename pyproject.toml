@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mitutu"
-version = "2025.0.1.11"
+version = "2025.0.1.12"
 description = "A random collection of code I use day to day :)"
 authors = ["Mitali Balki"]
 license = "None"
