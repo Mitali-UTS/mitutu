@@ -1,28 +1,4 @@
-# Solution
 import pandas as pd
-
-def pop_target(df, target_col):
-    """Extract target variable from dataframe
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Dataframe
-    target_col : str
-        Name of the target variable
-
-    Returns
-    -------
-    pd.DataFrame
-        Subsetted Pandas dataframe containing all features
-    pd.Series
-        Subsetted Pandas dataframe containing the target
-    """
-
-    df_copy = df.copy()
-    target = df_copy.pop(target_col)
-
-    return df_copy, target
 
 def save_sets(X_train=None, y_train=None, X_val=None, y_val=None, X_test=None, y_test=None, path='../data/processed/'):
     """Save the different sets locally
@@ -62,40 +38,6 @@ def save_sets(X_train=None, y_train=None, X_val=None, y_val=None, X_test=None, y
     if y_test is not None:
       np.save(f'{path}y_test',  y_test)
 
-# def load_sets1(path='../data/processed/'):
-#     """Load the different locally save sets
-
-#     Parameters
-#     ----------
-#     path : str
-#         Path to the folder where the sets are saved (default: '../data/processed/')
-
-#     Returns
-#     -------
-#     Numpy Array
-#         Features for the training set
-#     Numpy Array
-#         Target for the training set
-#     Numpy Array
-#         Features for the validation set
-#     Numpy Array
-#         Target for the validation set
-#     Numpy Array
-#         Features for the testing set
-#     Numpy Array
-#         Target for the testing set
-#     """
-#     import numpy as np
-#     import os.path
-
-#     X_train = np.load(f'{path}X_train.npy', allow_pickle=True) if os.path.isfile(f'{path}X_train.npy') else None
-#     X_val   = np.load(f'{path}X_val.npy'  , allow_pickle=True) if os.path.isfile(f'{path}X_val.npy')   else None
-#     X_test  = np.load(f'{path}X_test.npy' , allow_pickle=True) if os.path.isfile(f'{path}X_test.npy')  else None
-#     y_train = np.load(f'{path}y_train.npy', allow_pickle=True) if os.path.isfile(f'{path}y_train.npy') else None
-#     y_val   = np.load(f'{path}y_val.npy'  , allow_pickle=True) if os.path.isfile(f'{path}y_val.npy')   else None
-#     y_test  = np.load(f'{path}y_test.npy' , allow_pickle=True) if os.path.isfile(f'{path}y_test.npy')  else None
-
-#     return X_train, y_train, X_val, y_val, X_test, y_test
 
 # Solution
 def subset_x_y(target, features, start_index:int, end_index:int):
@@ -196,8 +138,34 @@ def split_sets_random(features, target, test_ratio=0.2):
 
     return X_train, y_train, X_val, y_val, X_test, y_test
 
+# function to extract the target column from the dataframe
+def pop_target(df, target_col):
+    """Extract target variable from dataframe without affecting the original dataframe
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe
+    target_col : str
+        Name of the target variable
+
+    Returns
+    -------
+    pd.DataFrame
+        Subsetted Pandas dataframe containing all features
+    pd.Series
+        Subsetted Pandas dataframe containing the target
+    """
+
+    df_copy = df.copy()
+    target = df_copy.pop(target_col)
+
+    return df_copy, target
+
+# function to load the preprocessed datasets
 def load_sets(path='../data/processed/'):
-    """Load the different locally saved sets which are usually in CSV format.
+    """Load the different locally saved sets which are in CSV format.
+    This fucntion will return None if the dataset does not exist in the specified directory.
 
     Parameters
     ----------
@@ -219,7 +187,6 @@ def load_sets(path='../data/processed/'):
     Pandas DataFrame
         Target for the testing set
     """
-    import pandas as pd
     import os.path
 
     X_train = pd.read_csv(f'{path}X_train.csv') if os.path.isfile(f'{path}X_train.csv') else None
@@ -230,3 +197,81 @@ def load_sets(path='../data/processed/'):
     y_test  = pd.read_csv(f'{path}y_test.csv' ) if os.path.isfile(f'{path}y_test.csv')  else None
 
     return X_train, y_train, X_val, y_val, X_test, y_test
+
+# function for resampling when it comes to imbalanced datasets
+def random_oversample(X_train, y_train, sampling_strategy, random_state = 80):
+    """
+    Randomly oversample the data by specifying the sampling strategy.
+
+    Parameters
+    ----------
+    X_train : pd.DataFrame
+        The training dataset that needs to be oversampled
+    y_train : pd.DataFrame
+        The target values that need to be referenced to oversample.
+    sampling_strategy : dict
+        A dictonary to specify how the data should be oversampled. eg {<label1>:<required rows>, <label2>: <required rows>}
+    random_state : int
+        Random state to keep results replicable. 
+    
+    Returns
+    -------
+    X_train_smote : pd.DataFrame
+        The oversampled dataset with the original column names
+    y_train_smote : pd.DataFrame
+        Target labels corresponding to the oversampled dataset.
+        
+    """
+    # import required module
+    from imblearn.over_sampling import RandomOverSampler
+
+    # initialize the random over sampler
+    ros = RandomOverSampler(sampling_strategy=sampling_strategy, random_state=random_state)
+
+    # oversample data
+    X_train_ros, y_train_ros = ros.fit_resample(X_train, y_train)
+
+    # recreate dataframes with original column names
+    y_train_ros = pd.DataFrame(y_train_ros, columns=y_train.columns)
+    X_train_ros = pd.DataFrame(X_train_ros, columns=X_train.columns)
+
+    return X_train_ros, y_train_ros
+
+# function for resampling when it comes to imbalanced datasets
+def smote_oversample(X_train, y_train, sampling_strategy, random_state = 80):
+    """
+    Oversample the data using SMOTE by specifying the sampling strategy.
+
+    Parameters
+    ----------
+    X_train : pd.DataFrame
+        The training dataset that needs to be oversampled
+    y_train : pd.DataFrame
+        The target values that need to be referenced to oversample.
+    sampling_strategy : dict
+        A dictonary to specify how the data should be oversampled. eg {<label1>:<required rows>, <label2>: <required rows>}
+    random_state : int
+        Random state to keep results replicable. 
+    
+    Returns
+    -------
+    X_train_smote : pd.DataFrame
+        The oversampled dataset with the original column names
+    y_train_smote : pd.DataFrame
+        Target labels corresponding to the oversampled dataset.
+        
+    """
+    # import required module
+    from imblearn.over_sampling import SMOTE
+
+    # initialize the random over sampler
+    smote = SMOTE(sampling_strategy=sampling_strategy, random_state=random_state)
+
+    # oversample data
+    X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
+
+    # recreate dataframes with original column names
+    y_train_smote = pd.DataFrame(y_train_smote, columns=y_train.columns)
+    X_train_smote = pd.DataFrame(X_train_smote, columns=X_train.columns)
+
+    return X_train_smote, y_train_smote
